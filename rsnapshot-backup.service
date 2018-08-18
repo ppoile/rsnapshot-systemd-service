@@ -1,0 +1,13 @@
+[Unit]
+Description=rsnapshot backup
+Requires=local-fs.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStop=/bin/bash -c "/bin/systemctl list-jobs | /bin/egrep -q 'reboot.target.*start' && /usr/bin/logger 'rsnapshot backup skipped while rebooting' || /usr/bin/rsnapshot alpha"
+TimeoutStopSec=infinity
+
+[Install]
+WantedBy=multi-user.target
